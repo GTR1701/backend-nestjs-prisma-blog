@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, NotFoundException, Param, Post } from '@nestjs/common';
 import { UserService } from './user/user.service';
 import { PostService } from './post/post.service';
-import { User as UserModel, Post as PostModel } from '@prisma/client';
+import { Post as PostModel } from '@prisma/client';
 
 @Controller()
 export class AppController {
@@ -43,19 +43,19 @@ export class AppController {
   }
 
   @Post('post')
-  async createDraft(@Body() postData: { title: string; content?: string; authorEmail?: string }): Promise<PostModel> {
-    const { title, content, authorEmail } = postData
+  async createDraft(@Body() postData: { title: string; content?: string; authorUsername: string }): Promise<PostModel> {
+    const { title, content, authorUsername } = postData
     return this.postService.createPost({
       title,
       content,
       author: {
-        connect: { email: authorEmail }
+        connect: { username: authorUsername }
       }
     })
   }
-
+  
   @Post('user')
-  async signupUser(@Body() userData: { name?: string; email: string }): Promise<UserModel> {
+  async signupUser(@Body() userData: { username: string; password: string }): Promise<string> {
     return this.userService.createUser(userData)
   }
 
