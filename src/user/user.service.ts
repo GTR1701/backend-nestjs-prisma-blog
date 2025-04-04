@@ -9,7 +9,7 @@ import { hashSync } from 'bcrypt';
 export class UserService {
     constructor(private readonly prisma: PrismaService) { }
 
-    async user(userWhereUniqueInput: Prisma.UserWhereUniqueInput): Promise<User | null> {
+    async getUser(userWhereUniqueInput: Prisma.UserWhereUniqueInput): Promise<User | null> {
         return this.prisma.user.findUnique({
             where: userWhereUniqueInput
         })

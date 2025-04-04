@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, NotFoundException, Param, Post } from '@
 import { UserService } from './user/user.service';
 import { PostService } from './post/post.service';
 import { Post as PostModel } from '@prisma/client';
+import { Public } from 'decorators/Public';
 
 @Controller()
 export class AppController {
@@ -10,6 +11,7 @@ export class AppController {
     private readonly postService: PostService
   ) { }
 
+  @Public()
   @Get('post/:id')
   async getPostById(@Param('id') id: string): Promise<PostModel> {
     const post = await this.postService.post({ id: Number(id) });
@@ -19,6 +21,7 @@ export class AppController {
     return post;
   }
 
+  @Public()
   @Get('feed')
   async getPublishedPosts(): Promise<PostModel[]> {
     return this.postService.posts({
@@ -26,6 +29,7 @@ export class AppController {
     })
   }
 
+  @Public()
   @Get('filtered-posts/:searchString')
   async getFilteredPosts(@Param('searchString') searchString: string): Promise<PostModel[]> {
     return this.postService.posts({
@@ -53,10 +57,10 @@ export class AppController {
       }
     })
   }
-  
-  @Post('user')
-  async signupUser(@Body() userData: { username: string; password: string }): Promise<string> {
-    return this.userService.createUser(userData)
+
+  @Delete('post/:id')
+  async deletePost(@Param('id') id: string): Promise<PostModel> {
+    return this.postService.deletePost({id: Number(id)})
   }
 
   @Post('publish/:id')
@@ -67,9 +71,9 @@ export class AppController {
     })
   }
 
-  @Delete('post/:id')
-  async deletePost(@Param('id') id: string): Promise<PostModel> {
-    return this.postService.deletePost({id: Number(id)})
+  @Public()
+  @Post('user')
+  async signupUser(@Body() userData: { username: string; password: string }): Promise<string> {
+    return this.userService.createUser(userData)
   }
-
 }
