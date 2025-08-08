@@ -60,20 +60,15 @@ export class AppController {
 
   @Delete('post/:id')
   async deletePost(@Param('id') id: string): Promise<PostModel> {
-    return this.postService.deletePost({id: Number(id)})
+    return this.postService.deletePost({ id: Number(id) })
   }
 
   @Post('publish/:id')
   async publishPost(@Param('id') id: string): Promise<PostModel> {
     return this.postService.updatePost({
-      where: {id: Number(id)},
-      data: {published: true}
+      where: { id: Number(id) },
+      data: { published: true }
     })
   }
 
-  @Public()
-  @Post('user')
-  async signupUser(@Body() userData: { username: string; password: string }): Promise<string> {
-    return this.userService.createUser(userData)
-  }
 }
